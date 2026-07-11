@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CiteTrace — AI Citation Forensics",
   "version": "1.0.0",
-  "description": "When ChatGPT, Perplexity, or Gemini cites a source, CiteTrace opens it and shows exactly which passages the AI used — verbatim lifts in red, paraphrases in orange — plus claims the source never made. 100% local. No API keys. No account.",
+  "description": "See exactly what ChatGPT, Perplexity & Gemini took from their sources — verbatim in red, paraphrase in orange. 100% local.",
   "permissions": ["storage", "tabs"],
   "background": {
     "service_worker": "background.js"

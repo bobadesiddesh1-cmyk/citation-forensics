@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AnswerShare — AI Share-of-Voice",
   "version": "1.0.0",
-  "description": "A rank tracker for AI answers. Silently logs which domains ChatGPT, Perplexity and Gemini cite for your queries, shows your citation share vs competitors, and autopsies every loss: exactly which passage won and why. 100% local. No account.",
+  "description": "A rank tracker for AI answers: see which domains ChatGPT, Perplexity & Gemini cite for your queries. 100% local, no account.",
   "permissions": ["storage", "tabs"],
   "background": {
     "service_worker": "background.js"
