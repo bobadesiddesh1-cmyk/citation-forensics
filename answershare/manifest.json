@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AnswerShare — AI Share-of-Voice",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A rank tracker for AI answers: see which domains ChatGPT, Perplexity & Gemini cite for your queries. 100% local, no account.",
   "permissions": ["storage", "tabs", "scripting"],
   "optional_host_permissions": ["https://*/*", "http://*/*"],
