@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CiteTrace</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><em>CITE</em>TRACE</div>
+    <div class="tagline">AI citation forensics — 100% local</div>
+  </header>
+
+  <section class="stats" id="stats">
+    <div class="stat"><b id="stat-total">0</b><span>traces</span></div>
+    <div class="stat"><b id="stat-coverage">–</b><span>avg page used</span></div>
+    <div class="stat"><b id="stat-verbatim">–</b><span>avg verbatim</span></div>
+    <div class="stat"><b id="stat-paraphrase">–</b><span>avg paraphrase</span></div>
+  </section>
+  <div class="agg-line" id="agg-line"></div>
+
+  <section class="toolbar">
+    <input type="search" id="filter" placeholder="filter by domain…" autocomplete="off">
+    <button id="export-csv" title="Export trace history as CSV">⬇ CSV</button>
+    <button id="clear-all" class="danger" title="Delete all trace history">✕ clear</button>
+  </section>
+
+  <section class="table-wrap">
+    <table id="history">
+      <thead>
+        <tr>
+          <th>date</th><th>ai</th><th>source</th>
+          <th class="num" title="verbatim sentences">V</th>
+          <th class="num" title="paraphrased sentences">P</th>
+          <th class="num" title="coverage of source page">used</th>
+        </tr>
+      </thead>
+      <tbody id="history-body"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>
+      No traces yet. Ask ChatGPT, Perplexity or Gemini something with web
+      sources, then hit 🔍 Trace next to a citation.
+    </div>
+  </section>
+
+  <section class="toggles">
+    <div class="toggles-title">trace buttons on</div>
+    <label><input type="checkbox" id="toggle-chatgpt"> ChatGPT</label>
+    <label><input type="checkbox" id="toggle-perplexity"> Perplexity</label>
+    <label><input type="checkbox" id="toggle-gemini"> Gemini</label>
+  </section>
+
+  <footer>No network requests. No analytics. Everything stays in your browser.</footer>
+
+  <script src="../shared/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
