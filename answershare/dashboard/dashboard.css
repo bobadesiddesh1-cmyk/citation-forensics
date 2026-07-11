@@ -103,8 +103,8 @@ textarea { font-family: var(--mono); font-size: 12px; resize: vertical; }
   align-items: center; padding: 6px 0; font: 600 12px var(--mono);
 }
 .lb-row .dom { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.lb-row .track { height: 9px; border-radius: 99px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; }
-.lb-row .fill { height: 100%; background: #46718a; }
+.lb-row .track { display: block; height: 9px; border-radius: 99px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; }
+.lb-row .fill { display: block; height: 100%; background: #46718a; }
 .lb-row .pct { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
 .lb-row.you .dom, .lb-row.you .pct { color: var(--accent-bright); }
 .lb-row.you .fill { background: var(--accent); }
