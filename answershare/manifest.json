@@ -1,0 +1,63 @@
+{
+  "manifest_version": 3,
+  "name": "AnswerShare — AI Share-of-Voice",
+  "version": "1.0.0",
+  "description": "A rank tracker for AI answers. Silently logs which domains ChatGPT, Perplexity and Gemini cite for your queries, shows your citation share vs competitors, and autopsies every loss: exactly which passage won and why. 100% local. No account.",
+  "permissions": ["storage", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "shared/tokenizer.js",
+        "shared/stoplist.js",
+        "shared/storage.js",
+        "content/adapters/chatgpt.js",
+        "content/adapters/perplexity.js",
+        "content/adapters/gemini.js",
+        "content/capture.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content/sentinel.js",
+        "shared/tokenizer.js",
+        "shared/stoplist.js",
+        "shared/storage.js",
+        "shared/report.js",
+        "content/extract.js",
+        "content/matcher.js",
+        "content/citability.js",
+        "content/highlighter.js",
+        "content/panel.js",
+        "content/main.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}

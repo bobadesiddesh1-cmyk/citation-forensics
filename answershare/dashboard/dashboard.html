@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AnswerShare — dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><em>ANSWER</em>SHARE <span class="tag">dashboard</span></div>
+    <nav id="views">
+      <button data-view="overview" class="active">Overview</button>
+      <button data-view="winloss">Win / Loss</button>
+      <button data-view="records">Records</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+  </header>
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <main id="view-overview" class="view">
+    <section class="filters">
+      <select id="f-topic"><option value="">all topics</option></select>
+      <select id="f-range">
+        <option value="7">last 7 days</option>
+        <option value="30" selected>last 30 days</option>
+        <option value="90">last 90 days</option>
+        <option value="0">all time</option>
+      </select>
+      <select id="f-engine">
+        <option value="">all engines</option>
+        <option>ChatGPT</option><option>Perplexity</option><option>Gemini</option>
+      </select>
+      <span class="hint" id="setup-hint" hidden>⚠ set your domain in Settings to unlock share &amp; loss tracking</span>
+    </section>
+
+    <section class="kpis">
+      <div class="kpi"><b id="k-queries">0</b><span>tracked queries</span></div>
+      <div class="kpi"><b id="k-share">–</b><span>your citation share</span></div>
+      <div class="kpi"><b id="k-top">–</b><span>top competitor</span></div>
+      <div class="kpi"><b id="k-losses">0</b><span>losses</span></div>
+    </section>
+
+    <section class="panel">
+      <h2>Your share, week by week</h2>
+      <svg id="trend" viewBox="0 0 600 90" preserveAspectRatio="none" aria-label="weekly citation share trend"></svg>
+      <div class="trend-labels" id="trend-labels"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Domain leaderboard <span class="sub">% of tracked queries where cited</span></h2>
+      <div id="leaderboard"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Loss list <span class="sub">queries where a competitor was cited and you weren't</span></h2>
+      <table class="tbl" id="loss-table">
+        <thead><tr><th>query</th><th>engine</th><th>date</th><th>winner</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="loss-empty" hidden></div>
+    </section>
+  </main>
+
+  <!-- ═══ WIN/LOSS ═══ -->
+  <main id="view-winloss" class="view" hidden>
+    <section class="panel">
+      <h2>Profile one of your pages</h2>
+      <p class="note">Open your page with the profiler to capture its structure, then compare
+      it against a winner profile (saved automatically whenever you trace a citation with 🔎 Why?).</p>
+      <div class="row">
+        <input type="url" id="profile-url" placeholder="https://yoursite.com/your-article">
+        <button id="profile-go" class="btn">PROFILE IT →</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Compare</h2>
+      <div class="row">
+        <select id="cmp-winner"><option value="">pick a winner profile…</option></select>
+        <span class="vs">vs</span>
+        <select id="cmp-mine"><option value="">pick your page profile…</option></select>
+      </div>
+      <div id="compare-out"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Saved profiles</h2>
+      <table class="tbl" id="profiles-table">
+        <thead><tr><th>kind</th><th>page</th><th>query</th><th>date</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="profiles-empty" hidden>No profiles yet. Trace a citation with 🔎 Why? or profile one of your pages above.</div>
+    </section>
+  </main>
+
+  <!-- ═══ RECORDS ═══ -->
+  <main id="view-records" class="view" hidden>
+    <section class="filters">
+      <input type="search" id="rec-search" placeholder="search queries or domains…">
+      <button id="rec-csv" class="btn">⬇ CSV</button>
+      <button id="rec-clear" class="btn danger">✕ clear all</button>
+    </section>
+    <section class="panel">
+      <table class="tbl" id="records-table">
+        <thead><tr><th>date</th><th>engine</th><th>query</th><th>citations (ranked)</th><th>you</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="records-empty" hidden>
+        No captures yet. Just use ChatGPT, Perplexity or Gemini normally — answers
+        with citations are logged automatically.
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <main id="view-settings" class="view" hidden>
+    <section class="panel">
+      <h2>Your domains</h2>
+      <p class="note">Citations to these count as YOUR wins. Comma-separated (subdomains match automatically).</p>
+      <input type="text" id="s-mine" placeholder="yoursite.com, yourblog.io">
+    </section>
+    <section class="panel">
+      <h2>Competitor domains <span class="sub">optional</span></h2>
+      <p class="note">Used to sharpen the loss list. Leave empty to treat every non-you citation as competition.</p>
+      <input type="text" id="s-competitors" placeholder="competitor.com, rival.org">
+    </section>
+    <section class="panel">
+      <h2>Topics <span class="sub">optional</span></h2>
+      <p class="note">One per line: <code>name: keyword1, keyword2</code>. A query joins a topic when it contains any keyword.</p>
+      <textarea id="s-topics" rows="4" placeholder="running shoes: running shoe, trainers, marathon&#10;crm: crm, sales pipeline"></textarea>
+    </section>
+    <section class="panel">
+      <h2>Capture</h2>
+      <label class="chk"><input type="checkbox" id="s-chatgpt"> ChatGPT</label>
+      <label class="chk"><input type="checkbox" id="s-perplexity"> Perplexity</label>
+      <label class="chk"><input type="checkbox" id="s-gemini"> Gemini</label>
+      <label class="chk"><input type="checkbox" id="s-toasts"> show capture toasts</label>
+    </section>
+    <div class="row">
+      <button id="s-save" class="btn">SAVE SETTINGS</button>
+      <span id="s-saved" class="saved-flash" hidden>✓ saved</span>
+    </div>
+  </main>
+
+  <footer>No network requests. No analytics. Everything stays in your browser.
+    Records cap: 2000 (oldest evicted first).</footer>
+
+  <script src="../shared/tokenizer.js"></script>
+  <script src="../shared/stoplist.js"></script>
+  <script src="../shared/storage.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
