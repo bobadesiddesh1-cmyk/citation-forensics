@@ -175,6 +175,28 @@
         toast("PDF tracing not supported yet — AnswerShare works on HTML pages.", "warn");
         return;
       }
+      // Page analysis needs the optional host permission, which only an
+      // extension page can request. If it isn't granted yet, guide the user
+      // to enable it once in the dashboard (opened for them).
+      chrome.runtime.sendMessage({ type: "ANSWERSHARE_HAS_PERMISSION" }, (resp) => {
+        if (chrome.runtime.lastError) return;
+        if (resp && resp.granted) {
+          startTrace(ex, citation);
+        } else {
+          toast(
+            "One-time setup: opening the AnswerShare dashboard — click “Enable page analysis”, then trace again.",
+            "warn"
+          );
+          chrome.runtime.sendMessage({ type: "ANSWERSHARE_OPEN_DASHBOARD" });
+        }
+      });
+    } catch (e) {
+      toast("AnswerShare hit an unexpected error starting this trace.", "warn");
+    }
+  }
+
+  function startTrace(ex, citation) {
+    try {
       const jobId = newId();
       const sentences = NS.Tokenizer.splitSentences(ex.answerText).map((s) => s.text);
       if (sentences.length === 0) {

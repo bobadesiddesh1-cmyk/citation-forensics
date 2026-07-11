@@ -3,7 +3,8 @@
   "name": "AnswerShare — AI Share-of-Voice",
   "version": "1.0.0",
   "description": "A rank tracker for AI answers: see which domains ChatGPT, Perplexity & Gemini cite for your queries. 100% local, no account.",
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage", "tabs", "scripting"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
   "background": {
     "service_worker": "background.js"
   },
@@ -41,23 +42,6 @@
         "content/capture.js"
       ],
       "run_at": "document_idle"
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "content/sentinel.js",
-        "shared/tokenizer.js",
-        "shared/stoplist.js",
-        "shared/storage.js",
-        "shared/report.js",
-        "content/extract.js",
-        "content/matcher.js",
-        "content/citability.js",
-        "content/highlighter.js",
-        "content/panel.js",
-        "content/main.js"
-      ],
-      "run_at": "document_end"
     }
   ]
 }

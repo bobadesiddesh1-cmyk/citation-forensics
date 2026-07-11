@@ -93,6 +93,8 @@ textarea { font-family: var(--mono); font-size: 12px; resize: vertical; }
 }
 .panel h2 .sub { color: var(--muted); opacity: 0.7; font-weight: 600; text-transform: none; letter-spacing: 0.02em; }
 .note { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; max-width: 70ch; }
+.perm-banner { border-color: var(--accent); background: rgba(20, 184, 166, 0.06); }
+.perm-banner h2 { color: var(--accent-bright); }
 .note code { font-family: var(--mono); font-size: 11px; background: var(--surface2); padding: 1px 5px; border-radius: 4px; }
 
 #trend { width: 100%; height: 90px; display: block; }
