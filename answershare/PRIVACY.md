@@ -26,10 +26,12 @@ dashboard ("clear all").
   telemetry, no analytics, no error reporting, and no remote code.
 - It does **not collect, transmit, sell, or share** any data with anyone,
   including the developer. Nothing ever leaves your browser.
-- It does not read pages you browse. On ordinary pages, the content script
-  performs a single sub-millisecond check for an extension-specific URL
-  fragment and exits. A page's content is only analyzed when you explicitly
-  trigger a trace/profile on that page, and the analysis happens locally.
+- It does not read pages you browse. Reading a page's text requires an
+  optional permission you grant explicitly ("Enable page analysis"), and even
+  then the script only acts on a page you deliberately sent it to (via an
+  extension-specific URL fragment) and exits on every other page after a
+  sub-millisecond check. All analysis happens locally. You can revoke the
+  permission at any time from the dashboard or chrome://extensions.
 - It does not use cookies, fingerprinting, or identifiers of any kind.
 
 ## Data removal

@@ -64,6 +64,15 @@
 
   <!-- ═══ WIN/LOSS ═══ -->
   <main id="view-winloss" class="view" hidden>
+    <section class="panel perm-banner" id="perm-banner" hidden>
+      <h2>Enable page analysis</h2>
+      <p class="note">Analyzing a winner's page or profiling your own opens that page and
+      reads its text locally. Chrome asks for one-time permission to run on the pages you
+      analyze — nothing is sent anywhere. This keeps the extension's default footprint to
+      the three AI sites only.</p>
+      <button id="perm-enable" class="btn">✓ ENABLE PAGE ANALYSIS</button>
+    </section>
+
     <section class="panel">
       <h2>Profile one of your pages</h2>
       <p class="note">Open your page with the profiler to capture its structure, then compare
@@ -115,6 +124,16 @@
 
   <!-- ═══ SETTINGS ═══ -->
   <main id="view-settings" class="view" hidden>
+    <section class="panel">
+      <h2>Page analysis permission</h2>
+      <p class="note">Status: <b id="perm-status">checking…</b>. Required for the win/loss
+      autopsy (opening and locally reading cited pages / your own pages). The three AI
+      sites work without it.</p>
+      <div class="row">
+        <button id="perm-enable-2" class="btn">✓ ENABLE PAGE ANALYSIS</button>
+        <button id="perm-revoke" class="btn danger" hidden>REVOKE</button>
+      </div>
+    </section>
     <section class="panel">
       <h2>Your domains</h2>
       <p class="note">Citations to these count as YOUR wins. Comma-separated (subdomains match automatically).</p>

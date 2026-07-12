@@ -11,6 +11,49 @@
   let profiles = [];
   let settings = null;
 
+  const BROAD_ORIGINS = ["https://*/*", "http://*/*"];
+
+  // ── optional host permission ("enable page analysis") ────────────────
+
+  async function hasAnalysisPermission() {
+    try {
+      return await chrome.permissions.contains({ origins: BROAD_ORIGINS });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Must be called from a user-gesture handler (button click). */
+  async function requestAnalysisPermission() {
+    try {
+      const ok = await chrome.permissions.request({ origins: BROAD_ORIGINS });
+      if (ok) {
+        await new Promise((resolve) =>
+          chrome.runtime.sendMessage({ type: "ANSWERSHARE_PERMISSION_GRANTED" }, () =>
+            resolve()
+          )
+        );
+      }
+      await refreshPermissionUi();
+      return ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function refreshPermissionUi() {
+    const granted = await hasAnalysisPermission();
+    const banner = $("perm-banner");
+    if (banner) banner.hidden = granted;
+    const status = $("perm-status");
+    if (status) status.textContent = granted ? "enabled ✓" : "not enabled";
+    const enable2 = $("perm-enable-2");
+    if (enable2) enable2.hidden = granted;
+    const revoke = $("perm-revoke");
+    if (revoke) revoke.hidden = !granted;
+    return granted;
+  }
+
   // ── helpers ────────────────────────────────────────────────────────────
 
   const fmtDate = (ts) => {
@@ -238,7 +281,8 @@
     return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
   }
 
-  function analyzeWhy(record, citation) {
+  async function analyzeWhy(record, citation) {
+    if (!(await ensurePermissionOrPrompt())) return;
     const jobId = newId();
     const sentences = NS.Tokenizer.splitSentences(record.answerText).map((s) => s.text);
     if (sentences.length === 0) return;
@@ -400,12 +444,21 @@
     out.appendChild(fx);
   }
 
-  function profileMyPage() {
+  /** Ensure analysis permission, prompting if needed. Calls permissions.request
+   *  directly (no awaited contains() first) so the click's user gesture is
+   *  preserved — request() is a silent no-op that resolves true when the
+   *  permission is already held. Must be reached synchronously from a click. */
+  async function ensurePermissionOrPrompt() {
+    return requestAnalysisPermission();
+  }
+
+  async function profileMyPage() {
     const url = $("profile-url").value.trim();
     if (!/^https?:\/\//.test(url)) {
       $("profile-url").focus();
       return;
     }
+    if (!(await ensurePermissionOrPrompt())) return;
     const jobId = newId();
     const job = {
       jobId,
@@ -588,6 +641,21 @@
     });
     $("s-save").addEventListener("click", saveSettingsForm);
     $("profile-go").addEventListener("click", profileMyPage);
+
+    // permission controls
+    await refreshPermissionUi();
+    for (const id of ["perm-enable", "perm-enable-2"]) {
+      const b = $(id);
+      if (b) b.addEventListener("click", requestAnalysisPermission);
+    }
+    $("perm-revoke").addEventListener("click", async () => {
+      try {
+        await chrome.permissions.remove({ origins: BROAD_ORIGINS });
+      } catch (e) {
+        /* ignore */
+      }
+      await refreshPermissionUi();
+    });
     $("cmp-winner").addEventListener("change", renderCompare);
     $("cmp-mine").addEventListener("change", renderCompare);
 

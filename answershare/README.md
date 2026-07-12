@@ -69,16 +69,29 @@ sentences average 41 — tighten").
 
 ## Permissions & privacy
 
-- Permissions: `storage`, `tabs` — nothing else. Zero host permissions for
-  fetching; the extension **cannot** make network requests for page content.
-- Content scripts: the three AI hosts, plus an `<all_urls>` **sentinel**
-  that performs a single `< 1 ms` check for the `#answershare=` URL fragment
-  and exits — the rest of that bundle is inert function definitions until a
-  trace/profile job targets that exact tab. (Same fragment-gated design as
-  CiteTrace; full rationale there and in DECISIONS.md.)
-- Your queries and answers are yours: they're stored **only** in
+- Manifest permissions: `storage`, `tabs`, `scripting` — no broad host
+  access is requested up front. The only declared content-script hosts are
+  the three AI sites (chatgpt.com, perplexity.ai, gemini.google.com), so
+  passive capture works immediately and the extension's default footprint is
+  narrow.
+- **Page analysis is an optional, on-demand permission.** The win/loss
+  autopsy needs to open and read cited pages / your own pages, which can be
+  any site — so instead of requesting `<all_urls>` in the manifest,
+  AnswerShare asks Chrome for that access **once**, when you first click
+  "Enable page analysis" (or Analyze why / Profile it) in the dashboard.
+  On grant, the forensics bundle is registered dynamically via
+  `chrome.scripting.registerContentScripts`; you can revoke it any time from
+  the dashboard or `chrome://extensions`. The inline 🔎 Why? button on the
+  AI pages checks this grant and, if it's missing, opens the dashboard so you
+  can enable it in one click.
+- Even with page analysis enabled, the injected script runs a `< 1 ms`
+  `#answershare=` fragment check and exits on any page you didn't explicitly
+  send it to (fragment-gated sentinel).
+- Zero host permissions for *fetching*; the extension **cannot** make
+  network requests for page content and makes no network requests at all.
+- Your queries and answers are yours: stored **only** in
   `chrome.storage.local` in your browser, capped, clearable in one click,
-  and never transmitted anywhere.
+  never transmitted anywhere.
 
 ## Honest limitations
 
