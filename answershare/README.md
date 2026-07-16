@@ -69,7 +69,7 @@ sentences average 41 — tighten").
 
 ## Permissions & privacy
 
-- Manifest permissions: `storage`, `tabs`, `scripting` — no broad host
+- Manifest permissions: `storage`, `scripting` — no broad host
   access is requested up front. The only declared content-script hosts are
   the three AI sites (chatgpt.com, perplexity.ai, gemini.google.com), so
   passive capture works immediately and the extension's default footprint is
